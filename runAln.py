@@ -6,15 +6,22 @@ from collections import Counter
 
 #csvFile = "/csc/analysis/Cscbioinf/Ikaros/IkarosChIPforPipe.csv"
 #baseDir = "/csc/analysis/Cscbioinf/Ikaros/"
-csvFile = "/csc/analysis/Cscbioinf/IkarosRelated/RelatedToIkarosChIPforPipe2.csv"
-baseDir = "/csc/analysis/Cscbioinf/IkarosRelated/"
-#csvFile = sys.argv[1]
-#baseDir = sys.argv[2] 
-#mergedGenome = sys.argv[2] 
+csvFile = "/csc/analysis/Cscbioinf/ChipPipeTest/IkarosChIPforPipe.csv"
+baseDir = "/csc/analysis/Cscbioinf/ChipPipeTest/"
 mergedGenome = "mm9"
+
+csvFile = sys.argv[1]
+baseDir = sys.argv[2] 
+mergedGenome = sys.argv[3] 
 
 errorPath = os.path.join(baseDir,"errors","")
 outputPath = os.path.join(baseDir,"outputs","")
+if not os.path.exists(errorPath):
+  os.makedirs(errorPath)
+
+if not os.path.exists(outputPath):
+  os.makedirs(outputPath)
+
 
 j = 0
 stdoutAlignDict = {}
@@ -111,7 +118,7 @@ if len(mergedBamName) > 0:
 
 allSampleDictionay = stdoutAlignDict.copy()
 allSampleDictionay.update(stdoutMergeDict)
-
+SampleList.extend(mergedBamName)
 
 with open(csvFile, 'rb') as csvfile:
  spamreader = csv.reader(csvfile,delimiter='\t',quotechar='|')
