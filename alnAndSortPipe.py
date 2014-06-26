@@ -2,6 +2,9 @@
 #PBS -N myjob
 #PBS -l select=1:ncpus=9:mem=12GB
 #PBS -l walltime=70:00:00
+from time import sleep
+
+sleep(30)
 
 import subprocess                                                 
 import os                                                         

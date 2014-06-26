@@ -4,10 +4,11 @@ import os
 import subprocess
 from collections import Counter
 
+
 #csvFile = "/csc/analysis/Cscbioinf/Ikaros/IkarosChIPforPipe.csv"
 #baseDir = "/csc/analysis/Cscbioinf/Ikaros/"
-csvFile = "/csc/analysis/Cscbioinf/ChipPipeTest/IkarosChIPforPipe.csv"
-baseDir = "/csc/analysis/Cscbioinf/ChipPipeTest/"
+csvFile = "/csc/analysis/Cscbioinf/2014020_sSauer_Extra/chipsSauer3.csv"
+baseDir = "/csc/analysis/Cscbioinf/2014020_sSauer_Extra/"
 mergedGenome = "mm9"
 
 csvFile = sys.argv[1]
@@ -98,7 +99,7 @@ if len(mergedBamName) > 0:
       mergingDependencies = mergingDependencies+":"+stdoutAlignDict[bam].strip()
     inputToMerge = "\\\\\;".join(mergedBams)
     outputBam = ""+mergedBamName[mergeIndex]+".bam"
-    picardMergeCMD = "echo /csc/rawdata/Cscbioinf/bioinfResources/chippipeline/mergePipe.py "+inputToMerge+" "+outputBam+" "+baseDir+" "+" | qsub -h -l select=1:ncpus=1:mem=12GB -l walltime=70:00:00 -N "+os.path.basename(outputBam)[0:7]+"merge"+mergingDependencies+" -e "+errorPath+" -o "+outputPath     
+    picardMergeCMD = "echo /csc/rawdata/Cscbioinf/bioinfResources/chippipeline/mergePipe.py "+inputToMerge+" "+outputBam+" "+baseDir+" "+" | qsub -l select=1:ncpus=1:mem=12GB -l walltime=70:00:00 -N "+os.path.basename(outputBam)[0:7]+"merge"+mergingDependencies+" -e "+errorPath+" -o "+outputPath     
     pMerge = subprocess.Popen(["/bin/bash",'-i',"-c",picardMergeCMD],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
     stdoutMerge,stderrMerge = pMerge.communicate() 
     stdoutMergeDict[os.path.basename(mergedBamName[mergeIndex])] = stdoutMerge
@@ -132,7 +133,20 @@ with open(csvFile, 'rb') as csvfile:
    stdout4,stderr4 = p4.communicate() 
    stdoutMacsPeakCallDict[jobName] = stdout4
    print submitCmd4
-   
+ 
+
+
+
+allJobs = stdoutChIPQCDict.values()+stdoutChIPQCDictMerge.values()+stdoutMacsPeakCallDict.values()
+
+alignJobrequirment = "-W depend=afterany"
+for alignJob in allJobs:
+    alignJobrequirment = alignJobrequirment+":"+alignJob.strip()
+
+
+PoolResultsCMD = "echo /csc/rawdata/Cscbioinf/bioinfResources/chippipeline/poolResults.py"+" "+csvFile+" "+mergedGenome+" "+baseDir+" | qsub -l select=1:ncpus=8:mem=20GB -l walltime=70:00:00 -N "+jobName[0:7]+"macs "+alignJobrequirment+" -e "+errorPath+" -o "+outputPath
+pFinal = subprocess.Popen(["/bin/bash",'-i',"-c",PoolResultsCMD],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+stdFinalOut,stdFinalError = pFinal.communicate() 
 
 for sampleJob in allSampleDictionay:
   pFinal = subprocess.Popen(["/bin/bash",'-i',"-c","qrls " + allSampleDictionay[sampleJob].strip()],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
