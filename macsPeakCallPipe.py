@@ -23,7 +23,7 @@ baseNameInput = sys.argv[4]
 outputPath = sys.argv[5]
 
 bamDir = os.path.join(outputPath,"AlignedData")
-macsDir = os.path.join(outputPath,"AlignedData")
+macsDir = os.path.join(outputPath,"Macs")
 if not os.path.exists(macsDir):
   os.makedirs(macsDir)
 
