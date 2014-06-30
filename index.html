@@ -28,14 +28,14 @@
         </ul>
       </header>
       <section>
-        <h4>
-<a name="mrc-csc-chip-seq-qc-pipeline" class="anchor" href="#mrc-csc-chip-seq-qc-pipeline"><span class="octicon octicon-link"></span></a>MRC CSC ChIP seq QC pipeline</h4>
+        <h1>
+<a name="chip-seq-qc-pipeline" class="anchor" href="#chip-seq-qc-pipeline"><span class="octicon octicon-link"></span></a>ChIP seq QC pipeline</h1>
 
-<p>The MRC chipseq pipeline provides basic processing, analysis and quality control applicable to ChIP-seq and other targeted enrichment sequencing technologies. The full description of these steps can be seen below.
+<p>The chipseq pipeline provides basic processing, analysis and quality control applicable to ChIP-seq and other targeted enrichment sequencing technologies. The full description of these steps can be seen below.
 Currently this is designed for use on the Imperial ax3 cluster using pbs pro v 12.2:</p>
 
-<h3>
-<a name="to-get-a-working-copy-of-this-project-please-use-the-version-installed-on-the-ax3-contact-thomascarrollimperialacuk" class="anchor" href="#to-get-a-working-copy-of-this-project-please-use-the-version-installed-on-the-ax3-contact-thomascarrollimperialacuk"><span class="octicon octicon-link"></span></a>To get a working copy of this project please use the version installed on the ax3. (Contact <a href="mailto:thomas.carroll@imperial.ac.uk">thomas.carroll@imperial.ac.uk</a>).</h3>
+<h5>
+<a name="to-get-a-working-copy-of-this-project-please-use-the-version-installed-on-the-ax3-contact-thomascarrollimperialacuk" class="anchor" href="#to-get-a-working-copy-of-this-project-please-use-the-version-installed-on-the-ax3-contact-thomascarrollimperialacuk"><span class="octicon octicon-link"></span></a>To get a working copy of this project please use the version installed on the ax3. (Contact <a href="mailto:thomas.carroll@imperial.ac.uk">thomas.carroll@imperial.ac.uk</a>).</h5>
 
 <p>If you would like the review the source code download from this <a href="https://github.com/ThomasCarroll/mrcchip/archive/master.zip">link</a>. </p>
 
@@ -44,8 +44,35 @@ $ wget https://github.com/ThomasCarroll/mrcchip/archive/master.zip ./
 $ unzip master.zip
 </code></pre>
 
+<h2>
+<a name="running-the-pipeline" class="anchor" href="#running-the-pipeline"><span class="octicon octicon-link"></span></a>Running the pipeline</h2>
+
+<h4>
+<a name="configuration" class="anchor" href="#configuration"><span class="octicon octicon-link"></span></a>Configuration</h4>
+
+<p>This section covers the basics configuration steps for running the chipseq pipeline including:</p>
+
+<ul>
+<li>species</li>
+<li>technical replicate merging.</li>
+<li>Input requirements and peak calling parameters.</li>
+<li>Sample and replicate groupings.</li>
+<li>Reporting requirements</li>
+</ul><p>The species to align to is provided as a command line argument, with the directory to output results {see below} where as all other parameters are provided in the samplesheet (<a href="you">example samplesheet</a>)</p>
+
+<pre><code>path_to_mypipeline/runAln.py [path_to_samplesheet] [path_to_myworkingdir] [species]
+</code></pre>
+
 <h3>
-<a name="running-the-pipeline" class="anchor" href="#running-the-pipeline"><span class="octicon octicon-link"></span></a>Running the pipeline</h3>
+<a name="species" class="anchor" href="#species"><span class="octicon octicon-link"></span></a>Species</h3>
+
+<p>Currently this pipeline supports 3 genomes and all genomes were retrieved from illumina's IGenomes:</p>
+
+<ul>
+<li>Homo sapiens <em>hg19</em> (Ensembl)</li>
+<li>Mus musculus <em>mm9</em> (UCSC)</li>
+<li>Drosophila melanogaster  <em>dm3</em> (UCSC)</li>
+</ul>
       </section>
       <footer>
         <p>This project is maintained by <a href="https://github.com/ThomasCarroll">ThomasCarroll</a></p>
