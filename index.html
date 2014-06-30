@@ -68,6 +68,7 @@ $ unzip master.zip
 <p>This section covers the basics configuration steps for running the chipseq pipeline including:</p>
 
 <ul>
+<li>Working directories</li>
 <li>species</li>
 <li>technical replicate merging.</li>
 <li>Input requirements and peak calling parameters.</li>
@@ -79,6 +80,34 @@ $ unzip master.zip
 </code></pre>
 
 <h3>
+<a name="working-directories" class="anchor" href="#working-directories"><span class="octicon octicon-link"></span></a>Working Directories</h3>
+
+<p>The working directory argument controls where the base directory for the pipeline output is. Fro there the pipeline will create the various job output and error directories and all subsequent processed and temporary files will be directed here.</p>
+
+<p>The basic structure of the output/error directories is.</p>
+
+<ul>
+<li>
+<strong>AlignedData</strong> - <em>Aligned sequence data in bam format</em>
+</li>
+<li>
+<strong>Coverage</strong> - <em>Raw and normalised signal graph files in bigwig format</em>
+</li>
+<li>
+<strong>flagstat</strong> - <em>Samtools flagstat output for aligned sequence file</em>
+</li>
+<li>
+<strong>Macs</strong> - <em>Macs 2 peak calls</em>
+</li>
+<li>
+<strong>chipqc</strong> - <em>R data files of ChIPQCsample objects containing per sample quality.</em>
+</li>
+</ul><p>A final project *.RData file can also be found at this level. This contains summary information for whole project/experiment/pipeline run.</p>
+
+<ul>
+<li>
+<strong>[samplesheet_name]report.RData</strong> - ChIPQCexperiment object summarising project ChIP quality.</li>
+</ul><h3>
 <a name="species" class="anchor" href="#species"><span class="octicon octicon-link"></span></a>Species</h3>
 
 <p>Currently this pipeline supports 3 genomes (<strong>hg19</strong>,<strong>mm9</strong>,<strong>dm3</strong>) and all genomes were retrieved from illumina's <a href="http://support.illumina.com/sequencing/sequencing_software/igenome.ilmn">IGenomes</a>:</p>
