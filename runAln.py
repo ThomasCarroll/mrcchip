@@ -27,7 +27,7 @@ parser = argparse.ArgumentParser(prog='./runAln.py',usage='%(prog)s -S(--samples
 parser.add_argument("-S","--samplesheet",type=file, help="The full path to samplesheet containing sample and metadata information",required=True)
 parser.add_argument("-D","--directory", help="The full path to directory where output directories will be created",required=True)
 parser.add_argument("-G","--genome", help="The genome to be used",required=True,choices=['hg19', 'mm9', 'dm3'])
-parser.parse_args()
+args = parser.parse_args()
 
 baseForPipeline = os.path.dirname(sys.argv[0])
 print baseForPipeline
@@ -38,9 +38,9 @@ csvFile = "/csc/analysis/Cscbioinf/2014020_sSauer_Extra/chipsSauer3.csv"
 baseDir = "/csc/analysis/Cscbioinf/2014020_sSauer_Extra/"
 mergedGenome = "mm9"
 
-csvFile = sys.argv[1]
-baseDir = sys.argv[2] 
-mergedGenome = sys.argv[3] 
+csvFile = args.samplesheet
+baseDir = args.directory 
+mergedGenome = args.genome 
 
 errorPath = os.path.join(baseDir,"errors","")
 outputPath = os.path.join(baseDir,"outputs","")
