@@ -24,7 +24,7 @@ parser = argparse.ArgumentParser(prog='./runAln.py',usage='%(prog)s -S(--samples
         For any other problems please contact Tom Carroll (thomas.carroll@imperial.ac.uk)
          ''')
   )
-parser.add_argument("-S","--samplesheet",type=file, help="The full path to samplesheet containing sample and metadata information",required=True)
+parser.add_argument("-S","--samplesheet",help="The full path to samplesheet containing sample and metadata information",required=True)
 parser.add_argument("-D","--directory", help="The full path to directory where output directories will be created",required=True)
 parser.add_argument("-G","--genome", help="The genome to be used",required=True,choices=['hg19', 'mm9', 'dm3'])
 args = parser.parse_args()
@@ -175,6 +175,6 @@ PoolResultsCMD = "echo "+os.path.join(baseForPipeline,"poolResults.py")+" "+csvF
 pFinal = subprocess.Popen(["/bin/bash",'-i',"-c",PoolResultsCMD],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
 stdFinalOut,stdFinalError = pFinal.communicate() 
 
-#for sampleJob in allSampleDictionay:
-#  pFinal = subprocess.Popen(["/bin/bash",'-i',"-c","qrls " + allSampleDictionay[sampleJob].strip()],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
-#  stdout4,stderr4 = pFinal.communicate() 
+for sampleJob in allSampleDictionay:
+  pFinal = subprocess.Popen(["/bin/bash",'-i',"-c","qrls " + allSampleDictionay[sampleJob].strip()],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+  stdout4,stderr4 = pFinal.communicate() 
