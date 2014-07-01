@@ -71,4 +71,4 @@ SS2 <- data.frame(
 
 
 resExperiment <- ChIPQC(SS2,annotation=organism,blacklist=blklist,chromosomes=chromosomes)
-save(resExperiment,file.path(baseDir,paste0(gsub("\\..*$","",basename(SampleSheet)),"_report.RData")))
+save(resExperiment,file=file.path(baseDir,paste0(gsub("\\..*$","",basename(SampleSheet)),"_report.RData")))
