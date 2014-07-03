@@ -151,8 +151,8 @@ SampleList.extend(mergedBamName)
 with open(csvFile, 'rb') as csvfile:
  spamreader = csv.reader(csvfile,delimiter='\t',quotechar='|')
  for row in spamreader:
-  print row[3]
-  print SampleList
+  #print row[3]
+  #print SampleList
   if row[3] in SampleList:
    jobName = os.path.basename(row[1])
    submitCmd4 = "echo "+os.path.join(baseForPipeline,"macsPeakCallPipe.py")+" "+row[0]+" "+row[1]+" "+row[2]+" "+row[3]+" "+baseDir+" | qsub -l select=1:ncpus=1:mem=12GB -l walltime=70:00:00 -W depend=afterok:"+allSampleDictionay[jobName].strip()+":"+allSampleDictionay[row[3]].strip()+" -e "+errorPath+" -o "+outputPath
