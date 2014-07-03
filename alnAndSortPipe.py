@@ -60,5 +60,7 @@ elif os.path.isfile(genomeFastaFiles[genome]) and os.path.isfile(genomeFastaFile
     else:
       print stderr, "\nResorting Failed\n"
 
-
-
+if os.path.exists(saiOut):
+  os.remove(saiOut)
+if os.path.exists(samOut):
+  os.remove(samOut)

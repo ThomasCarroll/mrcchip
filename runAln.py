@@ -75,27 +75,27 @@ with open(csvFile, 'rb') as csvfile:
     SampleName.append(row[1])  
     jobName = os.path.basename(row[1])
     SampleList.append(jobName)
-    submitCmd = "echo "+os.path.join(baseForPipeline,"alnAndSortPipe.py")+" "+row[0]+" "+row[1]+" "+row[2]+" "+baseDir+" | qsub -h -l select=1:ncpus=4:mem=12GB -l walltime=70:00:00 -N "+jobName[7:14]+"Align"+" -e "+errorPath+" -o "+outputPath
+    submitCmd = "echo "+os.path.join(baseForPipeline,"alnAndSortPipe.py")+" "+row[0]+" "+row[1]+" "+row[2]+" "+baseDir+" | qsub -h -l select=1:ncpus=4:mem=12GB -l walltime=70:00:00  -e "+errorPath+" -o "+outputPath
     print submitCmd
     p = subprocess.Popen(["/bin/bash",'-i',"-c",submitCmd],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
     stdout,stderr = p.communicate()
     stdoutAlignDict[jobName] = stdout
-    submitCmd3 = "echo "+os.path.join(baseForPipeline,"bedGraphAndBigWigPipe.py")+" "+row[0]+" "+row[1]+" "+row[2]+" "+baseDir+" | qsub -l select=1:ncpus=1:mem=12GB -l walltime=70:00:00 -N "+jobName[0:7]+"bigwig"+" -W depend=afterok:"+stdout.strip()+" -e "+errorPath+" -o "+outputPath
+    submitCmd3 = "echo "+os.path.join(baseForPipeline,"bedGraphAndBigWigPipe.py")+" "+row[0]+" "+row[1]+" "+row[2]+" "+baseDir+" | qsub -l select=1:ncpus=1:mem=12GB -l walltime=70:00:00  -W depend=afterok:"+stdout.strip()+" -e "+errorPath+" -o "+outputPath
     print submitCmd3
     p3 = subprocess.Popen(["/bin/bash",'-i',"-c",submitCmd3],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
     stdout3,stderr3 = p3.communicate()
     stdoutBigWigDict[jobName] = stdout3
-    submitCmd2 = "echo "+os.path.join(baseForPipeline,"flagStatPipe.py")+" "+row[0]+" "+row[1]+" "+row[2]+" "+baseDir+" | qsub -l select=1:ncpus=1:mem=12GB -l walltime=70:00:00 -N "+jobName[0:7]+"flagStat"+" -W depend=afterok:"+stdout.strip()+" -e "+errorPath+" -o "+outputPath
+    submitCmd2 = "echo "+os.path.join(baseForPipeline,"flagStatPipe.py")+" "+row[0]+" "+row[1]+" "+row[2]+" "+baseDir+" | qsub -l select=1:ncpus=1:mem=12GB -l walltime=70:00:00 -W depend=afterok:"+stdout.strip()+" -e "+errorPath+" -o "+outputPath
     p2 = subprocess.Popen(["/bin/bash",'-i',"-c",submitCmd2],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
     stdout2,stderr2 = p2.communicate() 
     stdoutflagStatDict[jobName] = stdout2
     print submitCmd2
-    submitCmdMarkDups = "echo "+os.path.join(baseForPipeline,"markDup.py")+" "+row[0]+" "+row[1]+" "+row[2]+" "+baseDir+" | qsub -l select=1:ncpus=1:mem=12GB -l walltime=70:00:00 -N "+jobName[0:7]+"ChIPQC"+" -W depend=afterok:"+stdout.strip()+" -e "+errorPath+" -o "+outputPath
+    submitCmdMarkDups = "echo "+os.path.join(baseForPipeline,"markDup.py")+" "+row[0]+" "+row[1]+" "+row[2]+" "+baseDir+" | qsub -l select=1:ncpus=1:mem=12GB -l walltime=70:00:00 -W depend=afterok:"+stdout.strip()+" -e "+errorPath+" -o "+outputPath
     pMarkDups = subprocess.Popen(["/bin/bash",'-i',"-c",submitCmdMarkDups],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
     stdoutMarkDups,stderrMarkDups = pMarkDups.communicate() 
     stdoutMarkDupsDict[jobName] = stdoutMarkDups
     print submitCmdMarkDups  
-    submitCmdChIPQC = "echo "+os.path.join(baseForPipeline,"runChIPQC.py")+" "+row[1]+" "+row[2]+" "+baseDir+" | qsub -l select=1:ncpus=1:mem=12GB -l walltime=70:00:00 -N "+jobName[0:7]+"ChIPQC"+" -W depend=afterok:"+stdoutMarkDups.strip()+" -e "+errorPath+" -o "+outputPath
+    submitCmdChIPQC = "echo "+os.path.join(baseForPipeline,"runChIPQC.py")+" "+row[1]+" "+row[2]+" "+baseDir+" | qsub -l select=1:ncpus=1:mem=12GB -l walltime=70:00:00 -W depend=afterok:"+stdoutMarkDups.strip()+" -e "+errorPath+" -o "+outputPath
     pChIPQC = subprocess.Popen(["/bin/bash",'-i',"-c",submitCmdChIPQC],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
     stdoutChIPQC,stderrChIPQC = pChIPQC.communicate() 
     stdoutChIPQCDict[jobName] = stdoutChIPQC
@@ -126,17 +126,17 @@ if len(mergedBamName) > 0:
       mergingDependencies = mergingDependencies+":"+stdoutAlignDict[bam].strip()
     inputToMerge = "\\\\\;".join(mergedBams)
     outputBam = ""+mergedBamName[mergeIndex]+".bam"
-    picardMergeCMD = "echo "+os.path.join(baseForPipeline,"mergePipe.py")+" "+inputToMerge+" "+outputBam+" "+baseDir+" "+" | qsub -l select=1:ncpus=1:mem=12GB -l walltime=70:00:00 -N "+os.path.basename(outputBam)[0:7]+"merge"+mergingDependencies+" -e "+errorPath+" -o "+outputPath     
+    picardMergeCMD = "echo "+os.path.join(baseForPipeline,"mergePipe.py")+" "+inputToMerge+" "+outputBam+" "+baseDir+" "+" | qsub -l select=1:ncpus=1:mem=12GB -l walltime=70:00:00 "+mergingDependencies+" -e "+errorPath+" -o "+outputPath     
     pMerge = subprocess.Popen(["/bin/bash",'-i',"-c",picardMergeCMD],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
     stdoutMerge,stderrMerge = pMerge.communicate() 
     stdoutMergeDict[os.path.basename(mergedBamName[mergeIndex])] = stdoutMerge
     print picardMergeCMD
-    submitCmdMarkDupsMerge = "echo "+os.path.join(baseForPipeline,"markDup.py")+" "+"Dummy"+" "+mergedBamName[mergeIndex]+" "+"Genome"+" "+baseDir+" | qsub -l select=1:ncpus=1:mem=12GB -l walltime=70:00:00 -N "+jobName[0:7]+"ChIPQC"+" -W depend=afterok:"+stdoutMerge.strip()+" -e "+errorPath+" -o "+outputPath
+    submitCmdMarkDupsMerge = "echo "+os.path.join(baseForPipeline,"markDup.py")+" "+"Dummy"+" "+mergedBamName[mergeIndex]+" "+"Genome"+" "+baseDir+" | qsub -l select=1:ncpus=1:mem=12GB -l walltime=70:00:00 -W depend=afterok:"+stdoutMerge.strip()+" -e "+errorPath+" -o "+outputPath
     pMarkDupsMerge = subprocess.Popen(["/bin/bash",'-i',"-c",submitCmdMarkDupsMerge],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
     stdoutMarkDupsMerge,stderrMarkDupsMerge = pMarkDupsMerge.communicate() 
     stdoutMarkDupsDictMerge[jobName] = stdoutMarkDupsMerge
     print submitCmdMarkDupsMerge  
-    submitCmdChIPQCMerge = "echo "+os.path.join(baseForPipeline,"runChIPQC.py")+" "+mergedBamName[mergeIndex]+" "+mergedGenome+" "+baseDir+" | qsub -l select=1:ncpus=1:mem=12GB -l walltime=70:00:00 -N "+jobName[0:7]+"ChIPQC"+" -W depend=afterok:"+stdoutMarkDupsMerge.strip()+" -e "+errorPath+" -o "+outputPath
+    submitCmdChIPQCMerge = "echo "+os.path.join(baseForPipeline,"runChIPQC.py")+" "+mergedBamName[mergeIndex]+" "+mergedGenome+" "+baseDir+" | qsub -l select=1:ncpus=1:mem=12GB -l walltime=70:00:00 -W depend=afterok:"+stdoutMarkDupsMerge.strip()+" -e "+errorPath+" -o "+outputPath
     pChIPQCMerge = subprocess.Popen(["/bin/bash",'-i',"-c",submitCmdChIPQCMerge],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
     stdoutChIPQCMerge,stderrChIPQCMerge = pChIPQCMerge.communicate() 
     stdoutChIPQCDictMerge[jobName] = stdoutChIPQCMerge
@@ -155,7 +155,7 @@ with open(csvFile, 'rb') as csvfile:
   print SampleList
   if row[3] in SampleList:
    jobName = os.path.basename(row[1])
-   submitCmd4 = "echo "+os.path.join(baseForPipeline,"macsPeakCallPipe.py")+" "+row[0]+" "+row[1]+" "+row[2]+" "+row[3]+" "+baseDir+" | qsub -l select=1:ncpus=1:mem=12GB -l walltime=70:00:00 -N "+jobName[0:7]+"macs"+" -W depend=afterok:"+allSampleDictionay[jobName].strip()+":"+allSampleDictionay[row[3]].strip()+" -e "+errorPath+" -o "+outputPath
+   submitCmd4 = "echo "+os.path.join(baseForPipeline,"macsPeakCallPipe.py")+" "+row[0]+" "+row[1]+" "+row[2]+" "+row[3]+" "+baseDir+" | qsub -l select=1:ncpus=1:mem=12GB -l walltime=70:00:00 -W depend=afterok:"+allSampleDictionay[jobName].strip()+":"+allSampleDictionay[row[3]].strip()+" -e "+errorPath+" -o "+outputPath
    p4 = subprocess.Popen(["/bin/bash",'-i',"-c",submitCmd4],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
    stdout4,stderr4 = p4.communicate() 
    stdoutMacsPeakCallDict[jobName] = stdout4
@@ -171,8 +171,9 @@ for alignJob in allJobs:
     alignJobrequirment = alignJobrequirment+":"+alignJob.strip()
 
 
-PoolResultsCMD = "echo "+os.path.join(baseForPipeline,"poolResults.py")+" "+csvFile+" "+mergedGenome+" "+baseDir+" | qsub -l select=1:ncpus=8:mem=20GB -l walltime=70:00:00 -N "+jobName[0:7]+"macs "+alignJobrequirment+" -e "+errorPath+" -o "+outputPath
+PoolResultsCMD = "echo "+os.path.join(baseForPipeline,"poolResults.py")+" "+csvFile+" "+mergedGenome+" "+baseDir+" | qsub -l select=1:ncpus=4:mem=20GB -l walltime=70:00:00 "+alignJobrequirment+" -e "+errorPath+" -o "+outputPath
 pFinal = subprocess.Popen(["/bin/bash",'-i',"-c",PoolResultsCMD],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+print PoolResultsCMD
 stdFinalOut,stdFinalError = pFinal.communicate() 
 
 for sampleJob in allSampleDictionay:

@@ -42,3 +42,6 @@ if not os.path.isfile(bigWigOut):
 	stdout,stderr = p.communicate()
   else:
     print stderr, "\nMaking bedGraph Failed\n"
+
+if os.path.exists(bedGraphOut):
+  os.remove(bedGraphOut)
