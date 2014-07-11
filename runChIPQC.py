@@ -24,13 +24,20 @@ module_add("R/3.1.0")
 
 bamDir = os.path.join(outputPath,"AlignedData")
 chipqcDir = os.path.join(outputPath,"chipqc")
+coverageDir = os.path.join(outputPath,"CoveragePileup")
 if not os.path.exists(chipqcDir):
   os.makedirs(chipqcDir)
 
 bamFile = os.path.join(bamDir,baseName+"DupMarked.bam")
 chipqcResult = os.path.join(chipqcDir,baseName+"DupMarked.RData")
+normBigWig = os.path.join(coverageDir,baseName+"DupMarked.Normalised.bw")
 chipqccmd = "Rscript /csc/rawdata/Cscbioinf/bioinfResources/chippipeline/runChIPQC.r "+bamFile+" "+genome+" "+blacklist[genome]
+normBigWigcmd = "Rscript /csc/rawdata/Cscbioinf/bioinfResources/chippipeline/makeNormalisedBigWig.r "+bamFile+" "+genome+" "+blacklist[genome]
 print chipqccmd
 if not os.path.isfile(chipqcResult):
   p = subprocess.Popen(["/bin/bash",'-i',"-c",chipqccmd], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
   stdout,stderr = p.communicate()
+if not os.path.isfile(normBigWig):
+  p = subprocess.Popen(["/bin/bash",'-i',"-c",normBigWigcmd], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+  stdout,stderr = p.communicate()
+

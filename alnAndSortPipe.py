@@ -34,7 +34,13 @@ if not os.path.exists(outputPath):
 saiOut = os.path.join(outputPath,baseName+".sai")
 samOut = os.path.join(outputPath,baseName+".sam")
 bamOut = os.path.join(outputPath,baseName+".bam")
+dupMarkedBam = os.path.join(outputPath,baseName+"DupMarked.bam")
 
+if os.path.exists(bamOut):
+  if os.stat(bamOut).st_size == 0:
+    os.remove(bamOut)
+    if os.path.exists(dupMarkedBam):
+      os.remove(dupMarkedBam)      
 
 print os.environ["LOADEDMODULES"]
 
