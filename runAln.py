@@ -100,7 +100,7 @@ with open(csvFile, 'rb') as csvfile:
     stdoutMarkDupsDict[jobName] = stdoutMarkDups
     print submitCmdMarkDups
     f.write(stdoutMarkDups.strip()+"\t"+submitCmdMarkDups+"\n")        
-    submitCmdChIPQC = "echo "+os.path.join(baseForPipeline,"runChIPQC.py")+" "+row[1]+" "+row[2]+" "+baseDir+" | qsub -l select=1:ncpus=1:mem=12GB -l walltime=70:00:00 -W depend=afterok:"+stdoutMarkDups.strip()+" -e "+errorPath+" -o "+outputPath
+    submitCmdChIPQC = "echo "+os.path.join(baseForPipeline,"runChIPQC.py")+" "+row[1]+" "+row[2]+" "+baseDir+" | qsub -l select=1:ncpus=1:mem=30GB -l walltime=70:00:00 -W depend=afterok:"+stdoutMarkDups.strip()+" -e "+errorPath+" -o "+outputPath
     pChIPQC = subprocess.Popen(["/bin/bash",'-i',"-c",submitCmdChIPQC],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
     stdoutChIPQC,stderrChIPQC = pChIPQC.communicate() 
     f.write(stdoutChIPQC.strip()+"\t"+submitCmdChIPQC+"\n")    
@@ -145,7 +145,7 @@ if len(mergedBamName) > 0:
     stdoutMarkDupsDictMerge[jobName] = stdoutMarkDupsMerge
     print submitCmdMarkDupsMerge
     f.write(stdoutMarkDupsMerge.strip()+"\t"+submitCmdMarkDupsMerge+"\n") 
-    submitCmdChIPQCMerge = "echo "+os.path.join(baseForPipeline,"runChIPQC.py")+" "+mergedBamName[mergeIndex]+" "+mergedGenome+" "+baseDir+" | qsub -l select=1:ncpus=1:mem=12GB -l walltime=70:00:00 -W depend=afterok:"+stdoutMarkDupsMerge.strip()+" -e "+errorPath+" -o "+outputPath
+    submitCmdChIPQCMerge = "echo "+os.path.join(baseForPipeline,"runChIPQC.py")+" "+mergedBamName[mergeIndex]+" "+mergedGenome+" "+baseDir+" | qsub -l select=1:ncpus=1:mem=30GB -l walltime=70:00:00 -W depend=afterok:"+stdoutMarkDupsMerge.strip()+" -e "+errorPath+" -o "+outputPath
     pChIPQCMerge = subprocess.Popen(["/bin/bash",'-i',"-c",submitCmdChIPQCMerge],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
     stdoutChIPQCMerge,stderrChIPQCMerge = pChIPQCMerge.communicate() 
     stdoutChIPQCDictMerge[jobName] = stdoutChIPQCMerge
