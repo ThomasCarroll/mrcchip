@@ -51,4 +51,4 @@ exportNormalisedBW <- function(bamFile,qc,normaliseTo="blacklisted"){
   export.bw(genomeCov,file.path(dirname(dirname(bamFile)),"CoveragePileup/",gsub("\\.bam","Normalised\\.bw",basename(bamFile))))
   message("..done")
 }
-exportNormalisedBW(bamFile,qc)
+

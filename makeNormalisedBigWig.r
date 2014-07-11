@@ -2,9 +2,8 @@ library(ChIPQC)
 Arguments <- commandArgs(trailingOnly = T)
 bamFile <- "/csc/analysis/Cscbioinf/IkarosRelated2/AlignedData/Ebf1DupMarked.bam"
 bamFile <- Arguments[1]
-qc <- file.path(dirname(dirname(bamFile)),"chipqc",gsub(".bam",".RData",basename(bamFile))
-          
-#qc <- Arguments[2]
+res <- file.path(dirname(dirname(bamFile)),"chipqc",gsub(".bam",".RData",basename(bamFile)))
+load(res)          
 
 
 exportNormalisedBW <- function(bamFile,qc,normaliseTo="blacklisted"){

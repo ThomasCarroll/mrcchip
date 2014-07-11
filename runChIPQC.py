@@ -31,6 +31,7 @@ if not os.path.exists(chipqcDir):
 bamFile = os.path.join(bamDir,baseName+"DupMarked.bam")
 chipqcResult = os.path.join(chipqcDir,baseName+"DupMarked.RData")
 normBigWig = os.path.join(coverageDir,baseName+"DupMarked.Normalised.bw")
+print normBigWig
 chipqccmd = "Rscript /csc/rawdata/Cscbioinf/bioinfResources/chippipeline/runChIPQC.r "+bamFile+" "+genome+" "+blacklist[genome]
 normBigWigcmd = "Rscript /csc/rawdata/Cscbioinf/bioinfResources/chippipeline/makeNormalisedBigWig.r "+bamFile+" "+genome+" "+blacklist[genome]
 print chipqccmd
@@ -38,6 +39,9 @@ if not os.path.isfile(chipqcResult):
   p = subprocess.Popen(["/bin/bash",'-i',"-c",chipqccmd], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
   stdout,stderr = p.communicate()
 if not os.path.isfile(normBigWig):
+  print normBigWig
   p = subprocess.Popen(["/bin/bash",'-i',"-c",normBigWigcmd], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
   stdout,stderr = p.communicate()
+  print stderr
+  print stdout
 
