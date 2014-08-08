@@ -35,7 +35,7 @@ saiOut = os.path.join(outputPath,baseName+".sai")
 samOut = os.path.join(outputPath,baseName+".sam")
 bamOut = os.path.join(outputPath,baseName+".bam")
 dupMarkedBam = os.path.join(outputPath,baseName+"DupMarked.bam")
-
+trimmedFQOut = os.path.join(outputPath,baseName+"trimmed.fq.gz")
 if os.path.exists(bamOut):
   if os.stat(bamOut).st_size == 0:
     os.remove(bamOut)
@@ -53,10 +53,14 @@ if not os.path.isfile(genomeFastaFiles[genome]) or not os.path.isfile(genomeFast
     "Fasta file is not found"
 elif os.path.isfile(genomeFastaFiles[genome]) and os.path.isfile(genomeFastaFiles[genome]+".bwt") and os.path.isfile(genomeFastaFiles[genome]+".sa"):
   if not os.path.isfile(bamOut):
-    p = subprocess.Popen(["/bin/bash",'-i',"-c","bwa aln -t 8 "+genomeFastaFiles[genome]+" "+fastq+" >"+saiOut], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    trimCMD1 = "zcat "+fastq+" | python  /csc/rawdata/Cscbioinf/bioinfResources/trimFQ.py 36 | gzip - > "+trimmedFQOut
+    print trimCMD1
+    p = subprocess.Popen(["/bin/bash",'-i',"-c",trimCMD1], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    stdout,stderr = p.communicate()    
+    p = subprocess.Popen(["/bin/bash",'-i',"-c","bwa aln -t 8 "+genomeFastaFiles[genome]+" "+trimmedFQOut+" >"+saiOut], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout,stderr = p.communicate()
     if p.returncode == 0:
-      p = subprocess.Popen(["/bin/bash",'-i',"-c","bwa samse "+genomeFastaFiles[genome]+" "+saiOut+" "+fastq+" >"+samOut], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+      p = subprocess.Popen(["/bin/bash",'-i',"-c","bwa samse "+genomeFastaFiles[genome]+" "+saiOut+" "+trimmedFQOut+" >"+samOut], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
       stdout,stderr = p.communicate()
     else:
       print stderr, "\nAlignment-Failed\n"

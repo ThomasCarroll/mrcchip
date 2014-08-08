@@ -26,7 +26,7 @@ bamBase <- gsub("DupMarked\\.bam","",basename(bamFiles))
 bamFrame <- cbind(bamBase,bamFiles)
 
 
-peaks <-  dir(file.path(baseDir,"AlignedData"),pattern="*_peaks.bed$",full.name=T)
+peaks <-  dir(file.path(baseDir,"Macs"),pattern="*_peaks.bed$",full.name=T)
 peaksBase <- gsub("_WithInput.*","",basename(peaks))
 peakFrame <- cbind(peaksBase,peaks)
 
@@ -72,3 +72,4 @@ SS2 <- data.frame(
 
 resExperiment <- ChIPQC(SS2,annotation=organism,blacklist=blklist,chromosomes=chromosomes)
 save(resExperiment,file=file.path(baseDir,paste0(gsub("\\..*$","",basename(SampleSheet)),"_report.RData")))
+q(save = "no", status = 0, runLast = TRUE)

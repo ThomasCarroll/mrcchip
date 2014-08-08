@@ -76,7 +76,7 @@ with open(csvFile, 'rb') as csvfile:
   SampleName.append(row[1])
   toMergeList.append(row[4])  
   if row[0] != "Merged":  
-    submitCmd = "echo "+os.path.join(baseForPipeline,"alnAndSortPipe.py")+" "+row[0]+" "+row[1]+" "+row[2]+" "+baseDir+" | qsub -h -l select=1:ncpus=4:mem=12GB -l walltime=70:00:00  -e "+errorPath+" -o "+outputPath
+    submitCmd = "echo "+os.path.join(baseForPipeline,"alnAndSortPipe2.py")+" "+row[0]+" "+row[1]+" "+row[2]+" "+baseDir+" | qsub -h -l select=1:ncpus=16:mem=12GB -l walltime=70:00:00  -e "+errorPath+" -o "+outputPath
     print submitCmd
     p = subprocess.Popen(["/bin/bash",'-i',"-c",submitCmd],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
     stdout,stderr = p.communicate()

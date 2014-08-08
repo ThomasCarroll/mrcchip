@@ -14,7 +14,7 @@ def module_add(modulename):
 
 module_add("bedtools/2.17.0")
 
-genomeChrLengths = {"mm9":"/csc/rawdata/Cscbioinf/bioinfResources/mm9/mm9.chrLengths","hg19":"/csc/rawdata/Cscbioinf/bioinfResources/Homo_sapiens/Ensembl/GRCh37/GenomeStudio/Homo_sapiens/Ensembl-GRCh37/ChromInfo.txt"}
+genomeChrLengths = {"mm9":"/csc/rawdata/Cscbioinf/bioinfResources/mm9/mm9.chrLengths"}
 
 fastq = sys.argv[1]
 baseName = sys.argv[2]
