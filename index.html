@@ -67,6 +67,16 @@ $ unzip chippipelineV0.1.zip
 </ul><p>The species to align to is provided as a command line argument, with the directory to output results {see below} where as all other parameters are provided in the samplesheet (<a href="https://github.com/ThomasCarroll/mrcchip/blob/master/example_samplesheet.txt">example samplesheet</a>)</p>
 
 <pre><code>usage: ./runAln.py -S(--samplesheet) [path_to_samplesheet] -D(--directory) [path_to_directory] -G(--genome) [genome]
+optional arguments:
+  -h, --help            show this help message and exit
+  -S SAMPLESHEET, --samplesheet SAMPLESHEET
+                        The full path to samplesheet containing sample and
+                        metadata information
+  -D DIRECTORY, --directory DIRECTORY
+                        The full path to directory where output directories
+                        will be created
+  -G {hg19,mm9,dm3}, --genome {hg19,mm9,dm3}
+                        The genome to be used
 
 </code></pre>
 
